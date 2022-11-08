@@ -77,9 +77,25 @@ def get_listing_information(listing_id):
         number of bedrooms
     )
     """
-    pass
+    var1 = "listings_"
+    var2 = listing_id
+    finalvar = var1 + var2
+    base_path = os.path.abspath(os.path.dirname(__file__))
+    full_path = os.path.join(base_path, finalvar)
+    with open(full_path, 'r' ) as f:
+        content = f.read()
+        soup = BeautifulSoup(content, 'html.parser')
+        policynumber = soup.find_all('span', class_ = "ll4r2nl dir dir-ltr")
+        strlistp = ['Pending', 'pending','Pending Application','City registration pending']
+        strliste = ['License not needed per OSTR','Exempt','exempt']
+        if policynumber in strlistp:
+            policynumber = "Pending"
+        elif policynumber in strliste:
+            policynumber = "Exempt"
+        else:
+            policynumber = policynumber
 
-
+            
 def get_detailed_listing_database(html_file):
     """
     Write a function that calls the above two functions in order to return
@@ -172,11 +188,12 @@ class TestCases(unittest.TestCase):
         # check that the variable you saved after calling the function is a list
         self.assertEqual(type(listings), list)
         # check that each item in the list is a tuple
-
+        for i in listings:
+            self.assertEqual(type(i),tuple)
         # check that the first title, cost, and listing id tuple is correct (open the search results html and find it)
-
+        self.assertEqual(listings[0],("Loft in Mission District",210, "1944564"))
         # check that the last title is correct (open the search results html and find it)
-        pass
+        self.assertEqual(listings[-1][0],("Guest suite in Mission District"))
 
     def test_get_listing_information(self):
         html_list = ["1623609",
