@@ -23,11 +23,36 @@ def get_listings_from_search_results(html_file):
     [
         ('Title of Listing 1', 'Cost 1', 'Listing ID 1'),  # format
         ('Loft in Mission District', 210, '1944564'),  # example
+
     ]
+
     """
-    pass
-
-
+    base_path = os.path.abspath(os.path.dirname(__file__))
+    full_path = os.path.join(base_path, html_file)
+    with open(full_path, 'r' ) as f:
+        content = f.read()
+        soup = BeautifulSoup(content, 'html.parser')
+        title = soup.find_all('div', class_ = 't1jojoys dir dir-ltr')
+        cost = soup.find_all('span', class_ = '_tyxjp1')
+        ids = soup.find_all('div', itemtype = "http://schema.org/ListItem") 
+        # remember to strip this 
+        listofid = []
+        for id in ids:
+            url = id.find('meta', itemprop = "url")["content"]
+            uri = url.split('?')[0]
+            id = uri.split('/')[-1]
+            listofid.append(id)
+        titlelist = []
+        for t in title:
+            titlelist.append(t.text.strip())
+        costlist = []
+        for c in cost:
+            costlist.append(c.text.strip()[1:])
+        finallist = []
+        for loop in range(len(titlelist)):
+            finallist.append((titlelist[loop],int(costlist[loop]),listofid[loop]))
+        print(finallist)
+        return finallist
 def get_listing_information(listing_id):
     """
     Write a function to return relevant information in a tuple from an Airbnb listing id.
