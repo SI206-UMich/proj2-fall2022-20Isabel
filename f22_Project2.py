@@ -331,6 +331,6 @@ if __name__ == '__main__':
     database = get_detailed_listing_database("html_files/mission_district_search_results.html")
     write_csv(database, "airbnb_dataset.csv")
     check_policy_numbers(database)
-    print(extra_credit('1944564'))
-    print(extra_credit('16204265'))
+    # print(extra_credit('1944564'))
+    # print(extra_credit('16204265'))
     unittest.main(verbosity=2)
